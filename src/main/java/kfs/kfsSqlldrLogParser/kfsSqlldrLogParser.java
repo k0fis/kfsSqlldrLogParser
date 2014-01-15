@@ -15,18 +15,25 @@ import java.util.regex.Pattern;
 public class kfsSqlldrLogParser {
 
     private final Pattern successfullyreaded = Pattern.compile("^(^\\d+) Rows successfully loaded.$");
+    private final Pattern successfullyreadeds = Pattern.compile("^(^\\d+) Row successfully loaded.$");
 
     public Integer readSuccessfullyReaded(String s) {
         if (s != null) {
-            Matcher m = successfullyreaded.matcher(s.trim());
+            s = s.trim();
+            Matcher m = successfullyreaded.matcher(s);
             if (m.find()) {
                 return Integer.parseInt(m.group(1));
+            } else {
+                m = successfullyreadeds.matcher(s);
+                if (m.find()) {
+                    return Integer.parseInt(m.group(1));
+                }
             }
         }
         return null;
     }
 
-    public Integer readSuccessfullyReadedFromLogFile(String file) throws kfsSqlldrLogParserException{
+    public Integer readSuccessfullyReadedFromLogFile(String file) throws kfsSqlldrLogParserException {
         if (file == null) {
             throw new kfsSqlldrLogParserException("Null filename");
         } else {
